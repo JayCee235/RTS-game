@@ -148,9 +148,9 @@ MouseWheelListener, Runnable {
 				if(work != null) {
 					work.draw(g2, i, j);
 				}
-				if(work instanceof Tree && (i == 0 || gameMap[i-1][j] instanceof Tree) 
-						&& (j == gameMap[i].length - 1 || gameMap[i][j+1] instanceof Tree) 
-						&& ((i == 0 && j == gameMap[i].length - 1) || gameMap[i-1][j+1] instanceof Tree)) {
+				if(work instanceof Tree && (i != 0 && gameMap[i-1][j] instanceof Tree) 
+						&& (j != gameMap[i].length - 1 && gameMap[i][j+1] instanceof Tree) 
+						&& ((i != 0 && j != gameMap[i].length - 1) && gameMap[i-1][j+1] instanceof Tree)) {
 					((Tree) work).drawOffset(g2, i, j);
 				}
 			}
