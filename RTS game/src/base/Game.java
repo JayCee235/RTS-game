@@ -21,8 +21,6 @@ MouseWheelListener, Runnable {
 		this.setMinimumSize(s);
 		this.setPreferredSize(s);
 		this.setMaximumSize(s);
-		
-		
 	}
 	
 	public void start() {
