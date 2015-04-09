@@ -12,7 +12,7 @@ public enum Material {
 	private static BufferedImage[] tilesetsFringe;
 	
 	public static int getCount() {
-		return 4;
+		return Material.getList().length;
 	}
 	
 	public static Material[] getList() {
@@ -30,7 +30,7 @@ public enum Material {
 		case water:
 			return 0;
 		default:
-			return -10;
+			return -1;
 		}
 	}
 	
@@ -58,5 +58,28 @@ public enum Material {
 	
 	public BufferedImage getSprite() {
 		return Material.tilesets[this.getLayer()];
+	}
+	
+	/**
+	 * Returns the proper fringe for a material based on from which sides it 
+	 * surrounds the tile.
+	 * @param code
+	 * @return
+	 */
+	public BufferedImage getFringe(int code) {
+		//Starting at left, going clockwise. left, top-left, top, etc...
+		int[] in = new int[8];
+		for(int i = 0; i < 8; i++) {
+			in[i] = (code & (1 << i)) >> i;
+		}
+		//The offset for the proper fringe from the fringe tilesheet.
+		//Which are all made by hand in MSPaint.
+		//God help me why did I decide to do that.
+		int dx = in[3] + 2*in[1] + 4*in[0] + 8*in[7];
+		int dy = in[4] + 2*in[6] + 4*in[2] + 8*in[5];
+		
+		BufferedImage out = Material.tilesetsFringe[this.getLayer()];
+		out = out.getSubimage(33*dx, 33*dy, 32, 32);
+		return out;
 	}
 }

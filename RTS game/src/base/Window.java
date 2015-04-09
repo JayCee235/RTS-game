@@ -40,6 +40,25 @@ public class Window {
 		return newGame;
 	}
 	
+	public MapEditor newMapEditor() {
+		MapEditor newGame = new MapEditor(this.width, this.height);
+		JFrame a = this.frame;
+		a.add(newGame);
+//		a.addKeyListener(newGame);
+//		a.addMouseListener(newGame);
+//		a.addMouseMotionListener(newGame);
+//		a.addMouseWheelListener(newGame);
+		
+		a.pack();
+		a.setLocationRelativeTo(null);
+		
+		this.gameReady = true;
+		
+		this.game = newGame;
+		
+		return newGame;
+	}
+	
 	public boolean startGame() {
 		if (gameReady) {
 			this.frame.setVisible(true);
