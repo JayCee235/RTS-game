@@ -24,7 +24,12 @@ public class MapEditor extends Game{
 			if (keys[KeyEvent.VK_T]) {
 				if (i >= 0 && i < groundMap.length && j >= 0
 						&& j < groundMap[0].length) {
-					gameMap[i][j] = new Tree(this);
+					gameMap[i][j] = this.tree;
+				}
+			}  else if (keys[KeyEvent.VK_H]) {
+				if (i >= 0 && i < groundMap.length && j >= 0
+						&& j < groundMap[0].length) {
+					gameMap[i][j] = this.hematite;
 				}
 			} else {
 				if (i >= 0 && i < groundMap.length && j >= 0
@@ -34,6 +39,8 @@ public class MapEditor extends Game{
 					else if (groundMap[i][j] == Material.sand)
 						groundMap[i][j] = Material.grass;
 					else if (groundMap[i][j] == Material.grass)
+						groundMap[i][j] = Material.stone;
+					else if (groundMap[i][j] == Material.stone)
 						groundMap[i][j] = Material.water;
 				}
 				this.readyPaint();

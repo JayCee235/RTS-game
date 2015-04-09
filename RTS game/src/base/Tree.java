@@ -5,7 +5,7 @@ import java.awt.Graphics;
 public class Tree extends Entity{
 	
 	public Tree(Object o) {
-		Tree.load("tree", o);
+		this.load("tree", o);
 	}
 	
 	

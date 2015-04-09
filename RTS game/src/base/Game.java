@@ -31,6 +31,10 @@ MouseWheelListener, Runnable {
 	
 	protected boolean dragging;
 	
+	protected Tree tree;
+	
+	protected Ore hematite;
+	
 	public Game(int w, int h) {
 		Dimension s = new Dimension(w, h);
 		this.setMinimumSize(s);
@@ -54,6 +58,9 @@ MouseWheelListener, Runnable {
 				groundMap[i][j] = Material.grass;
 			}
 		}
+		
+		tree = new Tree(this);
+		hematite = new Ore("hematite", this);
 	}
 	
 	public void start() {
@@ -147,11 +154,11 @@ MouseWheelListener, Runnable {
 				Entity work = gameMap[i][j];
 				if(work != null) {
 					work.draw(g2, i, j);
-				}
-				if(work instanceof Tree && (i != 0 && gameMap[i-1][j] instanceof Tree) 
-						&& (j != gameMap[i].length - 1 && gameMap[i][j+1] instanceof Tree) 
-						&& ((i != 0 && j != gameMap[i].length - 1) && gameMap[i-1][j+1] instanceof Tree)) {
-					((Tree) work).drawOffset(g2, i, j);
+					if((i != 0 && gameMap[i-1][j] == work) 
+							&& (j != gameMap[i].length - 1 && gameMap[i][j+1] == work) 
+							&& ((i != 0 && j != gameMap[i].length - 1) && gameMap[i-1][j+1] == work)) {
+						work.drawOffset(g2, i, j);
+					}
 				}
 			}
 		}
