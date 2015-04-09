@@ -26,9 +26,9 @@ public class Window {
 		JFrame a = this.frame;
 		a.add(newGame);
 		a.addKeyListener(newGame);
-		a.addMouseListener(newGame);
-		a.addMouseMotionListener(newGame);
-		a.addMouseWheelListener(newGame);
+//		a.addMouseListener(newGame);
+//		a.addMouseMotionListener(newGame);
+//		a.addMouseWheelListener(newGame);
 		
 		a.pack();
 		a.setLocationRelativeTo(null);
@@ -44,7 +44,7 @@ public class Window {
 		MapEditor newGame = new MapEditor(this.width, this.height);
 		JFrame a = this.frame;
 		a.add(newGame);
-//		a.addKeyListener(newGame);
+		a.addKeyListener(newGame);
 //		a.addMouseListener(newGame);
 //		a.addMouseMotionListener(newGame);
 //		a.addMouseWheelListener(newGame);

@@ -22,9 +22,11 @@ MouseWheelListener, Runnable {
 	
 	protected Material[][] groundMap;
 	
-	private int dx, dy, tdx, tdy, odx, ody;
+	protected int dx, dy, tdx, tdy, odx, ody;
 	
 	protected ArrayList<BufferedImage>[][] imageMap;
+	
+	protected boolean dragging;
 	
 	public Game(int w, int h) {
 		Dimension s = new Dimension(w, h);
@@ -124,6 +126,8 @@ MouseWheelListener, Runnable {
 		g2.setColor(Color.black);
 		g2.fillRect(0, 0, this.getWidth(), this.getHeight());
 		
+		g.translate(dx + odx, dy + ody);
+		
 		for(int i = 0; i < imageMap.length; i++) {
 			for(int j = 0; j < imageMap[i].length; j++) {
 				for(BufferedImage img : imageMap[i][j]) {
@@ -131,6 +135,8 @@ MouseWheelListener, Runnable {
 				}
 			}
 		}
+		
+		g.translate(-dx - odx, -dy - ody);
 	}
 
 	@Override
@@ -141,7 +147,10 @@ MouseWheelListener, Runnable {
 
 	@Override
 	public void mouseDragged(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+			if (dragging) {
+				odx = arg0.getX() - tdx;
+				ody = arg0.getY() - tdy;
+			}
 		
 	}
 
@@ -171,13 +180,23 @@ MouseWheelListener, Runnable {
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+		if (arg0.getButton() == 3) {
+			tdx = arg0.getX();
+			tdy = arg0.getY();
+			dragging = true;
+		}
 		
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+		if(arg0.getButton() == 3) {
+			dx += odx;
+			dy += ody;
+			odx = 0;
+			ody = 0;
+			dragging = false;
+		}
 		
 	}
 
