@@ -34,21 +34,20 @@ public enum Material {
 		}
 	}
 	
-	public static boolean loadMaterial() {
+	public static boolean loadMaterial(Object o) {
 		Material.tilesets = new BufferedImage[Material.getCount()];
 		Material.tilesetsFringe = new BufferedImage[Material.getCount()];
 		
 		Material[] in = Material.getList();
-		String pre = "res/";
+		String pre = "res/tiles/";
 		String tile = "_tile.png";
 		String fringe = "_fringe.png";
-		Test t = new Test();
 		//TODO: proper loop for all materials. Currently only loads sand and grass for debugging.
 		for(int i = 0; i < 3; i++) {
 			String name = in[i].toString();
 			try {
-				Material.tilesets[i] = ImageIO.read(t.getClass().getResource(pre+name+tile));
-				Material.tilesetsFringe[i] = ImageIO.read(t.getClass().getResource(pre+name+fringe));
+				Material.tilesets[i] = ImageIO.read(o.getClass().getResource(pre+name+tile));
+				Material.tilesetsFringe[i] = ImageIO.read(o.getClass().getResource(pre+name+fringe));
 			} catch (IOException e) {
 				return false;
 			}

@@ -19,8 +19,11 @@ import javax.swing.JComponent;
 public class Game extends JComponent implements KeyListener, MouseListener, MouseMotionListener, 
 MouseWheelListener, Runnable {
 	private boolean running;
+	protected boolean keys[];
 	
 	protected Material[][] groundMap;
+	
+	protected Entity[][] gameMap;
 	
 	protected int dx, dy, tdx, tdy, odx, ody;
 	
@@ -34,17 +37,20 @@ MouseWheelListener, Runnable {
 		this.setPreferredSize(s);
 		this.setMaximumSize(s);
 		
+		keys = new boolean[256];
+		
 		this.addKeyListener(this);
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
 		this.addMouseWheelListener(this);
 		
+		//TODO: Don't hardcode 20???
+		gameMap = new Entity[20][20];
+		
 		groundMap = new Material[20][20];
 		
 		for(int i = 0; i < groundMap.length; i++) {
 			for(int j = 0; j < groundMap[i].length; j++) {
-				groundMap[i][j] = Material.water;
-				//TODO: testing
 				groundMap[i][j] = Material.grass;
 			}
 		}
@@ -136,6 +142,20 @@ MouseWheelListener, Runnable {
 			}
 		}
 		
+		for(int j = 0; j < gameMap[0].length; j++) {
+			for(int i = 0; i < gameMap.length; i++) {
+				Entity work = gameMap[i][j];
+				if(work != null) {
+					work.draw(g2, i, j);
+				}
+				if(work instanceof Tree && (i == 0 || gameMap[i-1][j] instanceof Tree) 
+						&& (j == gameMap[i].length - 1 || gameMap[i][j+1] instanceof Tree) 
+						&& ((i == 0 && j == gameMap[i].length - 1) || gameMap[i-1][j+1] instanceof Tree)) {
+					((Tree) work).drawOffset(g2, i, j);
+				}
+			}
+		}
+		
 		g.translate(-dx - odx, -dy - ody);
 	}
 
@@ -202,14 +222,18 @@ MouseWheelListener, Runnable {
 
 	@Override
 	public void keyPressed(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
+		int code = arg0.getKeyCode();
+		if(code >= 0 && code < keys.length) {
+			keys[code] = true;
+		}
 	}
 
 	@Override
 	public void keyReleased(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
+		int code = arg0.getKeyCode();
+		if(code >= 0 && code < keys.length) {
+			keys[code] = false;
+		}
 	}
 
 	@Override
