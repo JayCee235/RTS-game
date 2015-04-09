@@ -1,7 +1,9 @@
 package base;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -53,7 +55,17 @@ MouseWheelListener, Runnable {
 	
 	@Override
 	public void paintComponent(Graphics g) {
+		Graphics2D g2 = (Graphics2D) g;
 		
+		g2.setColor(Color.black);
+		g2.fillRect(0, 0, this.getWidth(), this.getHeight());
+		
+		for(int i = 0; i < this.getWidth(); i+=32) {
+			for(int j = 0; j < this.getHeight(); j+=32) {
+				g.drawImage(Material.grass.getSprite(), i, j, i+32, j+32, 
+						0, 0, 32, 32, null);
+			}
+		}
 	}
 
 	@Override
