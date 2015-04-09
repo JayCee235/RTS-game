@@ -43,8 +43,8 @@ public enum Material {
 		String tile = "_tile.png";
 		String fringe = "_fringe.png";
 		Test t = new Test();
-		//TODO: proper loop for all materials. Currently only loads grass for debugging.
-		for(int i = 2; i < 3; i++) {
+		//TODO: proper loop for all materials. Currently only loads sand and grass for debugging.
+		for(int i = 0; i < 3; i++) {
 			String name = in[i].toString();
 			try {
 				Material.tilesets[i] = ImageIO.read(t.getClass().getResource(pre+name+tile));

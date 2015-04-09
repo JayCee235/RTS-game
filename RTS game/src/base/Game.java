@@ -43,7 +43,7 @@ MouseWheelListener, Runnable {
 		
 		for(int i = 0; i < groundMap.length; i++) {
 			for(int j = 0; j < groundMap[i].length; j++) {
-				groundMap[i][j] = Material.VOID;
+				groundMap[i][j] = Material.water;
 				//TODO: testing
 				groundMap[i][j] = Material.grass;
 			}

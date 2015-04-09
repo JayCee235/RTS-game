@@ -23,10 +23,12 @@ public class MapEditor extends Game{
 			int j = (arg0.getY() - (dy+ody)) / 32;
 			if (i >= 0 && i < groundMap.length && j >= 0
 					&& j < groundMap[0].length) {
-				if (groundMap[i][j] == Material.VOID)
+				if (groundMap[i][j] == Material.water)
+					groundMap[i][j] = Material.sand;
+				else if (groundMap[i][j] == Material.sand)
 					groundMap[i][j] = Material.grass;
 				else if (groundMap[i][j] == Material.grass)
-					groundMap[i][j] = Material.VOID;
+					groundMap[i][j] = Material.water;
 			}
 			this.readyPaint();
 		}
