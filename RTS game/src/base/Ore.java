@@ -26,4 +26,11 @@ public class Ore extends Entity{
 				0, 0, 32, 32, null);
 	}
 
+
+
+	@Override
+	public BufferedImage getImage() {
+		return this.tile;
+	}
+
 }

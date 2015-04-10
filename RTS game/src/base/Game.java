@@ -49,9 +49,10 @@ MouseWheelListener, Runnable {
 		this.addMouseWheelListener(this);
 		
 		//TODO: Don't hardcode 20???
-		gameMap = new Entity[20][20];
+		int size = 30;
+		gameMap = new Entity[size][size];
 		
-		groundMap = new Material[20][20];
+		groundMap = new Material[size][size];
 		
 		for(int i = 0; i < groundMap.length; i++) {
 			for(int j = 0; j < groundMap[i].length; j++) {

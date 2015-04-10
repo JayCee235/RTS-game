@@ -3,6 +3,7 @@ package base;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.Serializable;
 
 import javax.imageio.ImageIO;
 
@@ -24,4 +25,6 @@ public abstract class Entity {
 	
 	public abstract void draw(Graphics g, int x, int y);
 	public abstract void drawOffset(Graphics g, int x, int y);
+	
+	public abstract BufferedImage getImage();
 }

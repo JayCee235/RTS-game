@@ -1,6 +1,7 @@
 package base;
 
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 
 public class Tree extends Entity{
 	
@@ -19,6 +20,13 @@ public class Tree extends Entity{
 	public void drawOffset(Graphics g, int x, int y) {
 		g.drawImage(this.img, 32*x - 16, 32*(y-1) + 16, 32*(x+1) - 16, 32*(y+1) + 16, 
 				0, 0, 32, 64, null);
+	}
+
+
+
+	@Override
+	public BufferedImage getImage() {
+		return this.img;
 	}
 
 }
