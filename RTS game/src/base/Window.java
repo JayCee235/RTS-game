@@ -1,9 +1,14 @@
 package base;
 
+import java.awt.BorderLayout;
+
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JPanel;
 
 public class Window {
 	private JFrame frame;
+	private JPanel panel;
 	private int width, height;
 	private String title;
 	
@@ -17,6 +22,9 @@ public class Window {
 		this.height = h;
 		
 		this.frame = new JFrame(title);
+		this.panel = new JPanel();
+			
+			this.frame.add(this.panel);
 		
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
@@ -49,6 +57,8 @@ public class Window {
 //		a.addMouseMotionListener(newGame);
 //		a.addMouseWheelListener(newGame);
 		
+		newGame.addMenu(this);
+		
 		a.pack();
 		a.setLocationRelativeTo(null);
 		
@@ -67,5 +77,13 @@ public class Window {
 		} else {
 			return false;
 		}
+	}
+
+	public JPanel getPanel() {
+		return this.panel;
+	}
+	
+	public JFrame getFrame() {
+		return this.frame;
 	}
 }

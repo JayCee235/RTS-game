@@ -1,8 +1,11 @@
 package base;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -14,11 +17,16 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 
 import javax.imageio.ImageIO;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 
 public class MapEditor extends Game{
 	private boolean gridMode;
 	
-	private BufferedImage tileFrame, menu;
+//	private BufferedImage tileFrame, menu;
 	
 	private int selected = 0;
 	
@@ -30,14 +38,80 @@ public class MapEditor extends Game{
 	public MapEditor(int w, int h) {
 		super(w, h);
 		gridMode = false;
-		try {
-			menu = ImageIO.read(this.getClass().getResource("res/mapEditor/tileMenu.png"));
-			tileFrame = ImageIO.read(this.getClass().getResource("res/mapEditor/frame_malachite.png"));
-		} catch (IOException e) {
-			
-		}
+//		try {
+//			menu = ImageIO.read(this.getClass().getResource("res/mapEditor/tileMenu.png"));
+//			tileFrame = ImageIO.read(this.getClass().getResource("res/mapEditor/frame_malachite.png"));
+//		} catch (IOException e) {
+//			
+//		}
 		saveNum = 0;
 		brushSize = 2;
+	}
+	
+	public void addMenu(Window w) {
+		JMenuBar menuBar = new JMenuBar();
+//		JPanel menuHolder = new JPanel();
+		JMenu brush = new JMenu("Brush");
+		brush.setMnemonic(KeyEvent.VK_B);
+		menuBar.add(brush);
+		JMenu tile = new JMenu("Tile");
+		tile.setMnemonic(KeyEvent.VK_T);
+		menuBar.add(tile);
+		JMenu bS = new JMenu("Brush Size");
+		brush.add(bS);
+		for(int i = 1; i <= 4; i++) {
+			final int ii = i;
+			JMenuItem s = new JMenuItem("" + i);
+			s.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					brushSize = ii;
+				}
+			});
+			bS.add(s);
+		}
+		Entity[] allEntities = new Entity[] {this.hematite, this.tree};
+		String[] names = new String[] {"Hematite", "Tree"};
+		Material[] allMaterial = Material.getList();
+		JMenu mat = new JMenu("Ground");
+		for(Material m : allMaterial) {
+			JMenuItem add = new JMenuItem(m.toString());
+			add.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					selected = m.getLayer() + 2;
+				}
+			});
+			mat.add(add);
+		}
+		tile.add(mat);
+		
+		JMenu entt = new JMenu("Entities");
+		for(int i = 0; i < allEntities.length; i++) {
+			final int ii = i;
+			JMenuItem add = new JMenuItem(names[i]);
+			add.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					selected = ii;
+				}
+			});
+			entt.add(add);
+		}
+		JMenuItem add = new JMenuItem("Clear");
+		add.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				selected = -1;
+			}
+		});
+		entt.add(add);
+		tile.add(entt);
+		
+		
+		
+		w.getFrame().setJMenuBar(menuBar);
+		
 	}
 	
 	private void paintMap(MouseEvent arg0) {
@@ -47,6 +121,20 @@ public class MapEditor extends Game{
 					&& j < groundMap[0].length) {
 				if (!keys[KeyEvent.VK_DELETE]) {
 					switch (selected) {
+					case -1:
+						gameMap[i][j] = null;
+						if (brushSize > 1) {
+							for (int ii = 1 - brushSize; ii < brushSize; ii++) {
+								for (int jj = 1 - brushSize; jj < brushSize; jj++) {
+									boolean bound1 = i + ii >= 0 && i + ii < groundMap.length;
+									boolean bound2 = j + jj >= 0 && j + jj < groundMap[0].length;
+									if(bound1 && bound2) {
+										gameMap[i+ii][j+jj] = null;
+									}
+								}
+							}
+						}
+						break;
 					case 0:
 						gameMap[i][j] = this.hematite;
 						groundMap[i][j] = Material.stone;
@@ -81,6 +169,7 @@ public class MapEditor extends Game{
 						break;
 					case 2:
 						groundMap[i][j] = Material.water;
+						gameMap[i][j] = null;
 						if (brushSize > 1) {
 							for (int ii = 1 - brushSize; ii < brushSize; ii++) {
 								for (int jj = 1 - brushSize; jj < brushSize; jj++) {
@@ -88,12 +177,14 @@ public class MapEditor extends Game{
 									boolean bound2 = j + jj >= 0 && j + jj < groundMap[0].length;
 									if(bound1 && bound2) {
 										groundMap[i+ii][j+jj] = Material.water;
+										gameMap[i+ii][j+jj] = null;
 									}
 								}
 							}
 						}
 						break;
 					case 3:
+						gameMap[i][j] = null;
 						groundMap[i][j] = Material.sand;
 						if (brushSize > 1) {
 							for (int ii = 1 - brushSize; ii < brushSize; ii++) {
@@ -101,6 +192,7 @@ public class MapEditor extends Game{
 									boolean bound1 = i + ii >= 0 && i + ii < groundMap.length;
 									boolean bound2 = j + jj >= 0 && j + jj < groundMap[0].length;
 									if(bound1 && bound2) {
+										gameMap[i+ii][j+jj] = null;
 										groundMap[i+ii][j+jj] = Material.sand;
 									}
 								}
@@ -108,6 +200,7 @@ public class MapEditor extends Game{
 						}
 						break;
 					case 4:
+						gameMap[i][j] = null;
 						groundMap[i][j] = Material.grass;
 						if (brushSize > 1) {
 							for (int ii = 1 - brushSize; ii < brushSize; ii++) {
@@ -115,6 +208,7 @@ public class MapEditor extends Game{
 									boolean bound1 = i + ii >= 0 && i + ii < groundMap.length;
 									boolean bound2 = j + jj >= 0 && j + jj < groundMap[0].length;
 									if(bound1 && bound2) {
+										gameMap[i+ii][j+jj] = null;
 										groundMap[i+ii][j+jj] = Material.grass;
 									}
 								}
@@ -122,6 +216,7 @@ public class MapEditor extends Game{
 						}
 						break;
 					case 5:
+						gameMap[i][j] = null;
 						groundMap[i][j] = Material.stone;
 						if (brushSize > 1) {
 							for (int ii = 1 - brushSize; ii < brushSize; ii++) {
@@ -129,6 +224,7 @@ public class MapEditor extends Game{
 									boolean bound1 = i + ii >= 0 && i + ii < groundMap.length;
 									boolean bound2 = j + jj >= 0 && j + jj < groundMap[0].length;
 									if(bound1 && bound2) {
+										gameMap[i+ii][j+jj] = null;
 										groundMap[i+ii][j+jj] = Material.stone;
 									}
 								}
@@ -158,23 +254,24 @@ public class MapEditor extends Game{
 	@Override
 	public void mousePressed(MouseEvent arg0) {
 		super.mousePressed(arg0);
-		if(arg0.getX() >= this.getWidth() - 2*this.menu.getWidth() && 
-				arg0.getY() <= 2*this.menu.getHeight()) {
-			int x = arg0.getX() - (this.getWidth() - 2*this.menu.getWidth());
-			int y = arg0.getY();
-			
-			for (int i = 0; i < 2; i++) {
-				for (int j = 0; j < 3; j++) {
-					int xb = 18 + (i*66);
-					int yb = 24 + (j*66);
-					
-					if (x >= xb && x <= xb + 64 && y >= yb && y <= yb + 64) {
-						selected = i + 2*j;
-					}
-				}
-			}
-			
-		} else {
+//		if(arg0.getX() >= this.getWidth() - 2*this.menu.getWidth() && 
+//				arg0.getY() <= 2*this.menu.getHeight()) {
+//			int x = arg0.getX() - (this.getWidth() - 2*this.menu.getWidth());
+//			int y = arg0.getY();
+//			
+//			for (int i = 0; i < 2; i++) {
+//				for (int j = 0; j < 3; j++) {
+//					int xb = 18 + (i*66);
+//					int yb = 24 + (j*66);
+//					
+//					if (x >= xb && x <= xb + 64 && y >= yb && y <= yb + 64) {
+//						selected = i + 2*j;
+//					}
+//				}
+//			}
+//			
+//		} else 
+		{
 			if (arg0.getButton() == 1) {
 				painting = true;
 				this.paintMap(arg0);
@@ -195,41 +292,41 @@ public class MapEditor extends Game{
 			}
 		}
 		g.translate(-dx - odx, -dy - ody);
-		int x = this.getWidth() - 2*this.menu.getWidth();
-		int y = 0;
-		
-		g.drawImage(this.menu, x, y, 
-				x + 2*this.menu.getWidth(), y + 2*this.menu.getHeight(), 
-				0, 0, this.menu.getWidth(), this.menu.getHeight(), null);
-		
-		BufferedImage tr = this.tree.getImage();
-		BufferedImage rr = this.hematite.getImage();
-		
-		g.drawImage(tr, x+16 + 66, (y-64)+22, 
-				x+16 + 66 + 64, y+22 + 64, 
-				0, 0, tr.getWidth(), tr.getHeight(), null);
-		g.drawImage(rr, x+16, y+22, 
-				x+16 + 64, y+22 + 64, 
-				0, 0, rr.getWidth(), rr.getHeight(), null);
-		
-		Material[] in = Material.getList();
-		for(int i = 0; i < 2; i++) {
-			for(int j = 0+1; j < 2+1; j++) {
-				BufferedImage draw = in[i + 2*(j-1)].getSprite();
-				g.drawImage(draw, x+16 + 66*i, y+22 + 66*j, 
-						x+16 + 66*i + 64, y+22 + 66*j + 64, 
-						0, 0, draw.getWidth(), draw.getHeight(), null);
-			}
-		}
-		
-		
-		
-		
-		int i = selected % 2;
-		int j = selected / 2;
-		g.drawImage(this.tileFrame, x+16 + 66*i - 10, y+22 + 66*j - 10, 
-				x+16 + 66*i + 64 + 10, y+22 + 66*j + 64 + 10, 
-				0, 0, this.tileFrame.getWidth(), this.tileFrame.getHeight(), null);
+//		int x = this.getWidth() - 2*this.menu.getWidth();
+//		int y = 0;
+//		
+//		g.drawImage(this.menu, x, y, 
+//				x + 2*this.menu.getWidth(), y + 2*this.menu.getHeight(), 
+//				0, 0, this.menu.getWidth(), this.menu.getHeight(), null);
+//		
+//		BufferedImage tr = this.tree.getImage();
+//		BufferedImage rr = this.hematite.getImage();
+//		
+//		g.drawImage(tr, x+16 + 66, (y-64)+22, 
+//				x+16 + 66 + 64, y+22 + 64, 
+//				0, 0, tr.getWidth(), tr.getHeight(), null);
+//		g.drawImage(rr, x+16, y+22, 
+//				x+16 + 64, y+22 + 64, 
+//				0, 0, rr.getWidth(), rr.getHeight(), null);
+//		
+//		Material[] in = Material.getList();
+//		for(int i = 0; i < 2; i++) {
+//			for(int j = 0+1; j < 2+1; j++) {
+//				BufferedImage draw = in[i + 2*(j-1)].getSprite();
+//				g.drawImage(draw, x+16 + 66*i, y+22 + 66*j, 
+//						x+16 + 66*i + 64, y+22 + 66*j + 64, 
+//						0, 0, draw.getWidth(), draw.getHeight(), null);
+//			}
+//		}
+//		
+//		
+//		
+//		
+//		int i = selected % 2;
+//		int j = selected / 2;
+//		g.drawImage(this.tileFrame, x+16 + 66*i - 10, y+22 + 66*j - 10, 
+//				x+16 + 66*i + 64 + 10, y+22 + 66*j + 64 + 10, 
+//				0, 0, this.tileFrame.getWidth(), this.tileFrame.getHeight(), null);
 	}
 	
 	@Override

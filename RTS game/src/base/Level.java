@@ -33,10 +33,15 @@ public class Level implements Serializable {
 	
 	public void save(String name) {
 			try {
-				FileWriter fw = new FileWriter(name + ".BASElevel", false);
+				FileWriter fw = new FileWriter("src/level/" + name + ".BASElevel", false);
 				BufferedWriter bw = new BufferedWriter(fw);
 				
-				bw.write("." + width + "." + height + ".");
+				bw.write(".");
+				bw.write(width);
+				bw.write(".");
+				bw.write(height);
+				bw.write(".");
+				
 				for(int i = 0; i < width; i++) {
 					for(int j = 0; j < height; j++) {
 						bw.write(this.groundMap[i][j]);
