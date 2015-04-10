@@ -5,8 +5,10 @@ import java.awt.image.BufferedImage;
 
 public class Tree extends Entity{
 	
-	public Tree(Object o) {
+	
+	public Tree(Object o, int code) {
 		this.load("tree", o);
+		this.entityCode = code;
 	}
 	
 	
@@ -27,6 +29,13 @@ public class Tree extends Entity{
 	@Override
 	public BufferedImage getImage() {
 		return this.img;
+	}
+
+
+
+	@Override
+	public int getEntityCode() {
+		return entityCode;
 	}
 
 }

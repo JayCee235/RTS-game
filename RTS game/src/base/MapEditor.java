@@ -22,7 +22,10 @@ public class MapEditor extends Game{
 	
 	private int selected = 0;
 	
-	int saveNum;
+	private int saveNum;
+	
+	private boolean painting;
+	private int brushSize;
 	
 	public MapEditor(int w, int h) {
 		super(w, h);
@@ -34,10 +37,127 @@ public class MapEditor extends Game{
 			
 		}
 		saveNum = 0;
+		brushSize = 2;
+	}
+	
+	private void paintMap(MouseEvent arg0) {
+		int i = (arg0.getX() - (dx + odx)) / 32;
+		int j = (arg0.getY() - (dy + ody)) / 32;
+			if (i >= 0 && i < groundMap.length && j >= 0
+					&& j < groundMap[0].length) {
+				if (!keys[KeyEvent.VK_DELETE]) {
+					switch (selected) {
+					case 0:
+						gameMap[i][j] = this.hematite;
+						groundMap[i][j] = Material.stone;
+						if (brushSize > 1) {
+							for (int ii = 1 - brushSize; ii < brushSize; ii++) {
+								for (int jj = 1 - brushSize; jj < brushSize; jj++) {
+									boolean bound1 = i + ii >= 0 && i + ii < groundMap.length;
+									boolean bound2 = j + jj >= 0 && j + jj < groundMap[0].length;
+									if(bound1 && bound2) {
+										gameMap[i+ii][j+jj] = this.hematite;
+										groundMap[i+ii][j+jj] = Material.stone;
+									}
+								}
+							}
+						}
+						break;
+					case 1:
+						gameMap[i][j] = this.tree;
+						groundMap[i][j] = Material.grass;
+						if (brushSize > 1) {
+							for (int ii = 1 - brushSize; ii < brushSize; ii++) {
+								for (int jj = 1 - brushSize; jj < brushSize; jj++) {
+									boolean bound1 = i + ii >= 0 && i + ii < groundMap.length;
+									boolean bound2 = j + jj >= 0 && j + jj < groundMap[0].length;
+									if(bound1 && bound2) {
+										gameMap[i+ii][j+jj] = this.tree;
+										groundMap[i+ii][j+jj] = Material.grass;
+									}
+								}
+							}
+						}
+						break;
+					case 2:
+						groundMap[i][j] = Material.water;
+						if (brushSize > 1) {
+							for (int ii = 1 - brushSize; ii < brushSize; ii++) {
+								for (int jj = 1 - brushSize; jj < brushSize; jj++) {
+									boolean bound1 = i + ii >= 0 && i + ii < groundMap.length;
+									boolean bound2 = j + jj >= 0 && j + jj < groundMap[0].length;
+									if(bound1 && bound2) {
+										groundMap[i+ii][j+jj] = Material.water;
+									}
+								}
+							}
+						}
+						break;
+					case 3:
+						groundMap[i][j] = Material.sand;
+						if (brushSize > 1) {
+							for (int ii = 1 - brushSize; ii < brushSize; ii++) {
+								for (int jj = 1 - brushSize; jj < brushSize; jj++) {
+									boolean bound1 = i + ii >= 0 && i + ii < groundMap.length;
+									boolean bound2 = j + jj >= 0 && j + jj < groundMap[0].length;
+									if(bound1 && bound2) {
+										groundMap[i+ii][j+jj] = Material.sand;
+									}
+								}
+							}
+						}
+						break;
+					case 4:
+						groundMap[i][j] = Material.grass;
+						if (brushSize > 1) {
+							for (int ii = 1 - brushSize; ii < brushSize; ii++) {
+								for (int jj = 1 - brushSize; jj < brushSize; jj++) {
+									boolean bound1 = i + ii >= 0 && i + ii < groundMap.length;
+									boolean bound2 = j + jj >= 0 && j + jj < groundMap[0].length;
+									if(bound1 && bound2) {
+										groundMap[i+ii][j+jj] = Material.grass;
+									}
+								}
+							}
+						}
+						break;
+					case 5:
+						groundMap[i][j] = Material.stone;
+						if (brushSize > 1) {
+							for (int ii = 1 - brushSize; ii < brushSize; ii++) {
+								for (int jj = 1 - brushSize; jj < brushSize; jj++) {
+									boolean bound1 = i + ii >= 0 && i + ii < groundMap.length;
+									boolean bound2 = j + jj >= 0 && j + jj < groundMap[0].length;
+									if(bound1 && bound2) {
+										groundMap[i+ii][j+jj] = Material.stone;
+									}
+								}
+							}
+						}
+						break;
+					default:
+					}
+				} else {
+					gameMap[i][j] = null;
+					if (brushSize > 1) {
+						for (int ii = 1 - brushSize; ii < brushSize; ii++) {
+							for (int jj = 1 - brushSize; jj < brushSize; jj++) {
+								boolean bound1 = i + ii >= 0 && i + ii < groundMap.length;
+								boolean bound2 = j + jj >= 0 && j + jj < groundMap[0].length;
+								if(bound1 && bound2) {
+									gameMap[i+ii][j+jj] = null;
+								}
+							}
+						}
+					}
+				}
+			this.readyPaint();
+		}
 	}
 	
 	@Override
-	public void mouseClicked(MouseEvent arg0) {
+	public void mousePressed(MouseEvent arg0) {
+		super.mousePressed(arg0);
 		if(arg0.getX() >= this.getWidth() - 2*this.menu.getWidth() && 
 				arg0.getY() <= 2*this.menu.getHeight()) {
 			int x = arg0.getX() - (this.getWidth() - 2*this.menu.getWidth());
@@ -54,44 +174,10 @@ public class MapEditor extends Game{
 				}
 			}
 			
-			
-			
-			
 		} else {
 			if (arg0.getButton() == 1) {
-				int i = (arg0.getX() - (dx + odx)) / 32;
-				int j = (arg0.getY() - (dy + ody)) / 32;
-					if (i >= 0 && i < groundMap.length && j >= 0
-							&& j < groundMap[0].length) {
-						if (!keys[KeyEvent.VK_DELETE]) {
-							switch (selected) {
-							case 0:
-								gameMap[i][j] = this.hematite;
-								groundMap[i][j] = Material.stone;
-								break;
-							case 1:
-								gameMap[i][j] = this.tree;
-								groundMap[i][j] = Material.grass;
-								break;
-							case 2:
-								groundMap[i][j] = Material.water;
-								break;
-							case 3:
-								groundMap[i][j] = Material.sand;
-								break;
-							case 4:
-								groundMap[i][j] = Material.grass;
-								break;
-							case 5:
-								groundMap[i][j] = Material.stone;
-								break;
-							default:
-							}
-						} else {
-							gameMap[i][j] = null;
-						}
-					this.readyPaint();
-				}
+				painting = true;
+				this.paintMap(arg0);
 			}
 		}
 	}
@@ -155,6 +241,9 @@ public class MapEditor extends Game{
 	@Override
 	public void mouseDragged(MouseEvent arg0) {
 		super.mouseDragged(arg0);
+		if (painting) {
+			this.paintMap(arg0);
+		}
 		
 	}
 
@@ -177,14 +266,15 @@ public class MapEditor extends Game{
 	}
 
 	@Override
-	public void mousePressed(MouseEvent arg0) {
-		super.mousePressed(arg0);
+	public void mouseClicked(MouseEvent arg0) {
+		super.mouseClicked(arg0);
 		
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
 		super.mouseReleased(arg0);
+		painting = false;
 		
 	}
 
@@ -195,28 +285,22 @@ public class MapEditor extends Game{
 			gridMode = !gridMode;
 		}
 		//TODO: How does this work...
-//		if(arg0.getKeyCode() == KeyEvent.VK_S) {
-//			System.out.println("Saving...");
-//			Level lv = new Level(30, 30, groundMap, gameMap);
-//			try {
-//				File ent = new File("C:\\levelEditor\\level" + 
-//						this.saveNum++ + ".ser");
-//				if(!ent.exists()) {
-//					ent.createNewFile();
-//				}
-//				FileOutputStream fout = new FileOutputStream("C:\\levelEditor\\level" + 
-//			this.saveNum++ + ".ser");
-//				ObjectOutputStream oout = new ObjectOutputStream(fout);
-//				
-//				oout.writeObject(lv);
-//				oout.close();
-//				System.out.println("whoa");
-//			} catch (FileNotFoundException e) {
-//				System.err.println("Uh oh");
-//			} catch (IOException e) {
-//				System.err.println("Uh ohh");
-//			}
-//		}
+		if(arg0.getKeyCode() == KeyEvent.VK_S) {
+			Level lv = new Level(30, 30, groundMap, gameMap);
+			lv.save("Level" + saveNum++);
+		}
+		
+		if(arg0.getKeyCode() == KeyEvent.VK_UP) {
+			this.brushSize++;
+			if(brushSize >= 4) 
+				brushSize = 4;
+		}
+		
+		if(arg0.getKeyCode() == KeyEvent.VK_DOWN) {
+			this.brushSize--;
+			if(brushSize <= 1) 
+				brushSize = 1;
+		}
 		
 	}
 

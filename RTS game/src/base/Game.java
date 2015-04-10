@@ -60,8 +60,8 @@ MouseWheelListener, Runnable {
 			}
 		}
 		
-		tree = new Tree(this);
-		hematite = new Ore("hematite", this);
+		tree = new Tree(this, 1);
+		hematite = new Ore("hematite", this, 2);
 	}
 	
 	public void start() {

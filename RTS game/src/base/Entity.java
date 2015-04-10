@@ -11,6 +11,8 @@ public abstract class Entity {
 	protected BufferedImage img;
 	protected boolean loaded;
 	
+	protected int entityCode;
+	
 	public void load(String file, Object o) {
 		if (!loaded) {
 			try {
@@ -27,4 +29,6 @@ public abstract class Entity {
 	public abstract void drawOffset(Graphics g, int x, int y);
 	
 	public abstract BufferedImage getImage();
+	
+	public abstract int getEntityCode();
 }

@@ -7,10 +7,11 @@ public class Ore extends Entity{
 	BufferedImage tile;
 	BufferedImage corner;
 	
-	public Ore(String name, Object o) {
+	public Ore(String name, Object o, int code) {
 		this.load(name, o);
 		tile = img.getSubimage(0, 0, 32, 32);
 		corner = img.getSubimage(32, 0, 32, 32);
+		this.entityCode = code;
 	}
 	
 	
@@ -33,4 +34,10 @@ public class Ore extends Entity{
 		return this.tile;
 	}
 
+
+
+	@Override
+	public int getEntityCode() {
+		return this.entityCode;
+	}
 }
