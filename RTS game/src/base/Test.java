@@ -8,12 +8,15 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class Test extends Game{
-	Entity selected;
-	int sx, sy;
+	Unit selected;
 	BufferedImage f;
+	
+	int mouseX, mouseY;
 	
 	public Test(int w, int h, Entity[][] gam, Material[][] grd) {
 		super(w, h);
+		mouseX = this.getWidth() / 2;
+		mouseY = this.getHeight() / 2;
 		this.gameMap = gam;
 		this.groundMap = grd;
 		try {
@@ -28,14 +31,16 @@ public class Test extends Game{
 		super.paintComponent(g);
 		if(selected != null && selected instanceof Unit) {
 			Unit work = (Unit) selected;
-			int px = 32 * sx + work.px - 5;
-			int py = 32 * sy + work.py - 5;
-			g.drawImage(f, px, py, px + f.getWidth(), py + f.getHeight(), 
+			int px = 32 * this.selected.x + work.px - 5;
+			int py = 32 * this.selected.y + work.py - 5;
+			g.translate(dx + odx, dy + ody);
+			g.drawImage(f, px , py, px + f.getWidth(), py + f.getHeight(), 
 					0, 0, f.getWidth(), f.getHeight(), null);
+			g.translate(-dx - odx, -dy - ody);
 		}
 	}
 	
-	public int clamp(int in, int min, int max) {
+	public static int clamp(int in, int min, int max) {
 		int out = in;
 		out = out > max ? max : out;
 		out = out < min ? min : out;
@@ -52,28 +57,45 @@ public class Test extends Game{
 				}
 			}
 		}
+		
+		if (!dragging) {
+			if (mouseX <= 64) {
+				this.dx += 8;
+			}
+			if (mouseY <= 64) {
+				this.dy += 8;
+			}
+			if (mouseX >= this.getWidth() - 64) {
+				this.dx -= 8;
+			}
+			if (mouseY >= this.getHeight() - 64) {
+				this.dy -= 8;
+			}
+		}
+		
+		
 	}
 	
 	@Override
 	public void mousePressed(MouseEvent arg0) {
+		if (arg0.getButton() == 2) {
+			tdx = arg0.getX();
+			tdy = arg0.getY();
+			dragging = true;
+		}
 		int i = (arg0.getX() - (dx + odx)) / 32;
 		int j = (arg0.getY() - (dy + ody)) / 32;
 		if (i >= 0 && i < groundMap.length && j >= 0
 				&& j < groundMap[0].length) {
 			Entity e = this.gameMap[i][j];
 			if (e != null && e instanceof Unit) {
-					selected = this.gameMap[i][j];
-					sx = i;
-					sy = j;
+					selected = ((Unit) this.gameMap[i][j]);
+					this.selected.x = i;
+					this.selected.y = j;
 			} else { 
 				if(selected instanceof Unit) {
-					dx = clamp(i - sx, -1, 1);
-					dy = clamp(j - sy, -1, 1);
-					if (((Unit) selected).move(groundMap, gameMap, dx, dy)) {
-						gameMap[sx][sy] = null;
-						gameMap[sx + dx][sy + dy] = selected;
-						sx += dx;
-						sy += dy;
+					if (selected.moveTo(groundMap, gameMap, i, j)) {
+						
 					}
 				}
 			}
@@ -85,6 +107,23 @@ public class Test extends Game{
 		Material.loadMaterial(window);
 		Game current = window.newMapEditor();
 		window.startGame();
+	}
+	
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		if(arg0.getButton() == 2) {
+			dx += odx;
+			dy += ody;
+			odx = 0;
+			ody = 0;
+			dragging = false;
+		}
+		
+	}
+	
+	public void mouseMoved(MouseEvent arg0) {
+		mouseX = arg0.getX();
+		mouseY = arg0.getY();
 	}
 
 }

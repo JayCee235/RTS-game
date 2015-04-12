@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 
 public class Scout extends Unit{
 	
-	public Scout() {
+	public Scout(Material[][] m, Entity[][] e, int x, int y) {
 		this.load("Scout");
 		this.moveSpeed = 2;
 		this.maxHealth = 30;
@@ -16,7 +16,13 @@ public class Scout extends Unit{
 		this.attackSpeed = 20;
 		this.attackDamage = 2;
 		
+		this.x = x;
+		this.y = y;
+		
 		this.walkable = new Material[] {Material.sand, Material.grass, Material.stone};
+		
+		this.game = e;
+		this.ground = m;
 	}
 
 	@Override

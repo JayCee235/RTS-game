@@ -80,7 +80,7 @@ MouseWheelListener, Runnable {
 			this.repaint();
 			long dt = System.currentTimeMillis() - start;
 			try {
-				Thread.sleep((1000-dt)/60);
+				Thread.sleep(Test.clamp((int) ((1000-dt)/60), 0, 1000/60));
 			} catch (InterruptedException e) {
 				
 			}

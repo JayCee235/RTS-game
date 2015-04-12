@@ -245,7 +245,7 @@ public class MapEditor extends Game{
 						}
 						break;
 					case 101:
-						gameMap[i][j] = new Scout();
+						gameMap[i][j] = new Scout(this.groundMap, this.gameMap, i, j);
 						break;
 					default:
 					}
