@@ -29,6 +29,27 @@ public class Window {
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
+	public Test test(Entity[][] gam, Material[][] grd) {
+		this.frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		
+		Test newGame = new Test(this.width, this.height, gam, grd);
+		JFrame a = this.frame;
+		a.add(newGame);
+		a.addKeyListener(newGame);
+//		a.addMouseListener(newGame);
+//		a.addMouseMotionListener(newGame);
+//		a.addMouseWheelListener(newGame);
+		
+		a.pack();
+		a.setLocationRelativeTo(null);
+		
+		this.gameReady = true;
+		
+		this.game = newGame;
+		
+		return newGame;
+	}
+	
 	public Game newGame() {
 		Game newGame = new Game(this.width, this.height);
 		JFrame a = this.frame;

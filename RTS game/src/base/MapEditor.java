@@ -57,6 +57,11 @@ public class MapEditor extends Game{
 		JMenu tile = new JMenu("Tile");
 		tile.setMnemonic(KeyEvent.VK_T);
 		menuBar.add(tile);
+		JMenu unit = new JMenu("Unit");
+		unit.setMnemonic(KeyEvent.VK_U);
+		menuBar.add(unit);
+		
+		
 		JMenu bS = new JMenu("Brush Size");
 		brush.add(bS);
 		for(int i = 1; i <= 4; i++) {
@@ -70,6 +75,7 @@ public class MapEditor extends Game{
 			});
 			bS.add(s);
 		}
+		
 		Entity[] allEntities = new Entity[] {this.hematite, this.tree};
 		String[] names = new String[] {"Hematite", "Tree"};
 		Material[] allMaterial = Material.getList();
@@ -108,7 +114,14 @@ public class MapEditor extends Game{
 		entt.add(add);
 		tile.add(entt);
 		
-		
+		JMenuItem scout = new JMenuItem("Scout");
+		scout.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				selected = 101;
+			}
+		});
+		unit.add(scout);
 		
 		w.getFrame().setJMenuBar(menuBar);
 		
@@ -230,6 +243,9 @@ public class MapEditor extends Game{
 								}
 							}
 						}
+						break;
+					case 101:
+						gameMap[i][j] = new Scout();
 						break;
 					default:
 					}
@@ -384,7 +400,7 @@ public class MapEditor extends Game{
 		//TODO: How does this work...
 		if(arg0.getKeyCode() == KeyEvent.VK_S) {
 			Level lv = new Level(30, 30, groundMap, gameMap);
-			lv.save("Level" + saveNum++);
+//			lv.save("Level" + saveNum++);
 		}
 		
 		if(arg0.getKeyCode() == KeyEvent.VK_UP) {
@@ -397,6 +413,20 @@ public class MapEditor extends Game{
 			this.brushSize--;
 			if(brushSize <= 1) 
 				brushSize = 1;
+		}
+		
+		if(arg0.getKeyCode() == KeyEvent.VK_E) {
+			Window w = new Window("Testing", 800, 600);
+			Entity[][] e = new Entity[this.gameMap.length][this.gameMap[0].length];
+			Material[][] m = new Material[this.groundMap.length][this.groundMap[0].length];
+			for(int i = 0; i < groundMap.length; i++) {
+				for(int j = 0; j < groundMap[i].length; j++) {
+					e[i][j] = gameMap[i][j];
+					m[i][j] = groundMap[i][j];
+				}
+			}
+			w.test(e, m);
+			w.startGame();
 		}
 		
 	}

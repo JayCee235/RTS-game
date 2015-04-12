@@ -14,6 +14,10 @@ public class Level implements Serializable {
 	int[][] groundMap;
 	int[][] gameMap;
 	
+	Level() {
+		
+	}
+	
 	public Level(int width, int height, Material[][] groundMap,
 			Entity[][] gameMap) {
 		super();
